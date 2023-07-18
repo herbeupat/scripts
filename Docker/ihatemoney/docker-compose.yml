@@ -1,0 +1,27 @@
+services:
+  ihatemoney:
+    image: ihatemoney/ihatemoney
+    ports:
+      - 8000:8000
+    environment:
+      SECRET_KEY: ihatemoneysupersecretkey
+      SQLALCHEMY_DATABASE_URI: mysql+pymysql://ihatemoneyuser:ihatemoneypasswd@mariadb/ihatemoney
+      ACTIVATE_ADMIN_DASHBOARD: "True"
+      ALLOW_PUBLIC_PROJECT_CREATION: "False"
+      ADMIN_PASSWORD: '' # see https://ihatemoney.readthedocs.io/en/latest/configuration.html#admin-password, don't forget to double the $
+      ACTIVATE_DEMO_PROJECT: "False"
+    restart: unless-stopped
+
+  mariadb:
+    image: mariadb:11.0
+    volumes:
+      - database:/var/lib/mysql
+    environment:
+      MARIADB_USER: ihatemoneyuser
+      MARIADB_PASSWORD: ihatemoneypasswd
+      MARIADB_ROOT_PASSWORD: ihatemoneyroot
+      MARIADB_DATABASE: ihatemoney
+    restart: unless-stopped
+
+volumes:
+  database:
