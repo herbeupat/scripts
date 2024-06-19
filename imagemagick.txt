@@ -1,0 +1,2 @@
+# group images in a single PDF
+magick  -quality 60 prefix-* "File.pdf"
