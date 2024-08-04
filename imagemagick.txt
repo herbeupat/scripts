@@ -1,2 +1,7 @@
 # group images in a single PDF
 magick  -quality 60 prefix-* "File.pdf"
+
+# if images are too big (because grouping uses too much RAM), resize them before
+
+magick mogrify -quality 80 -resize x2400 "prefix-*" && magick "prefix-*" "File.pdf"
+# resize x2400 will resize image to auto width x 2400 height
