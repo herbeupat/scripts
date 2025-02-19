@@ -70,9 +70,9 @@ echo "Artist: $ARTIST; Album: $ALBUM; Title: $TITLE"
 m4a_title="$TITLE.m4a"
 mp3_title="$TITLE.mp3"
 echo "Will download $TITLE"
-yt-dlp -f 140 -o "$m4a_title" $YOUTUBE_URL
+yt-dlp -f 140 -o "$m4a_title" --quiet $YOUTUBE_URL
 echo "Download ended, convert to mp3 192k"
-ffmpeg -i "$m4a_title" -c:a libmp3lame -b:a 192k  "$mp3_title"
+ffmpeg -i "$m4a_title" -c:a libmp3lame -b:a 192k -hide_banner -loglevel warning "$mp3_title"
 rm "$m4a_title"
 
 if ! command -v id3v2 2>&1 >/dev/null
@@ -90,7 +90,7 @@ fi
 # move afterwards because yt-dlp has issues with NFS
 
 if [ "$OUTPUT_DIR" != "$(pwd)" ]; then
-    mv "$mp3_title" "$OUTPUT_DIR"
+    mv "$mp3_title" "$OUTPUT_DIR/$mp3_title"
 fi
 
 echo "Output to $OUTPUT_DIR/$mp3_title"
