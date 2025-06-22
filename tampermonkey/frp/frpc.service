@@ -1,0 +1,23 @@
+# ADAPTED FROM https://gist.github.com/imyelo/b6c3d3d9383f7d5623f06a0c11052530
+
+# 1. put frpc and frpc.ini under /usr/local/frpc/
+# 2. put this file (frpc.service) at /etc/systemd/system
+# 3. run `sudo systemctl daemon-reload && sudo systemctl enable frpc && sudo systemctl start frpc`
+# Then we can manage frpc with `sudo service frpc {start|stop|restart|status}`
+# See also: https://nosame.net/use-frp-to-reverse-proxy-your-nas/
+
+# Alternative for server:
+# - Offical: https://github.com/fatedier/frp/blob/a4cfab6/conf/systemd/frpc%40.service
+
+[Unit]
+Description=frp client
+Wants=network-online.target
+After=network.target network-online.target
+
+[Service]
+ExecStart=/root/frp/frpc -c /root/frp/frpc.toml
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target
