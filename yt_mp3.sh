@@ -4,8 +4,8 @@ set -e
 TITLE=""
 ARTIST=""
 ALBUM=""
+YEAR=""
 OUTPUT_DIR="$(pwd)"
-echo "$OUTPUT_DIR"
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -24,6 +24,11 @@ while [[ $# -gt 0 ]]; do
       if [[ "$ALBUM" == "" ]]; then
         ALBUM="$TITLE"
       fi
+      shift # past argument
+      shift # past value
+      ;;
+    -y|--year)
+      YEAR="$2"
       shift # past argument
       shift # past value
       ;;
@@ -79,7 +84,16 @@ if ! command -v id3v2 2>&1 >/dev/null
 then
     echo "Cannot write id3 tag, please install id3v2"
 else
-    id3v2 -t "$TITLE" -a "$ARTIST" -A "$ALBUM" "$mp3_title"
+    ID3_ARGS=(-t "$TITLE")
+    ID3_ARGS+=(-a "$ARTIST")
+    ID3_ARGS+=(-A "$ALBUM")
+      if [ "$YEAR" != "" ]; then
+        ID3_ARGS+=(-y $YEAR)
+    fi
+
+    ID3_ARGS+=("$mp3_title")
+
+    id3v2 "${ID3_ARGS[@]}"
 fi
 
 if [ "$MKDIRS" == "YES" ]; then
