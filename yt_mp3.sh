@@ -75,7 +75,18 @@ echo "Artist: $ARTIST; Album: $ALBUM; Title: $TITLE"
 m4a_title="$TITLE.m4a"
 mp3_title="$TITLE.mp3"
 echo "Will download $TITLE"
-yt-dlp -f 140 -o "$m4a_title" --quiet $YOUTUBE_URL
+
+## support multiple providers
+# Soundcloud
+if [[ $YOUTUBE_URL == https://soundcloud.com* ]] ;
+then
+  yt-dlp -o "$m4a_title" --quiet $YOUTUBE_URL 
+else
+ yt-dlp -f 140 -o "$m4a_title" --quiet $YOUTUBE_URL
+  # defaults to Youtube
+fi
+
+
 echo "Download ended, convert to mp3 192k"
 ffmpeg -i "$m4a_title" -c:a libmp3lame -b:a 192k -hide_banner -loglevel warning "$mp3_title"
 rm "$m4a_title"
